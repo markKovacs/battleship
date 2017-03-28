@@ -1,6 +1,3 @@
-from random import randint
-import math
-
 
 ##
 # Ask user to make a guess, ask for (x,y) coords

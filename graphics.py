@@ -1,6 +1,3 @@
-from random import randint
-import math
-
 
 ##
 # Print the board

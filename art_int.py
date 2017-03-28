@@ -1,5 +1,4 @@
 from random import randint
-import math
 
 ##
 # AI places ship randomly - row coordinate

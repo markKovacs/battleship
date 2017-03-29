@@ -9,16 +9,16 @@ ALLOWED_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 def validate_turns(turns):
     '''
     Validate user input for number of turns
-        @param
-        @return list [False, [errors]]
+        @param string turns User input to be validated
+        @return list [True, []] if valid, otherwise [False, [errors]]
     '''
     is_valid = False
     errors = []
     result = []
-    
+
     if turns == 'exit' or turns == 'quit':
         graphics.print_outro()
-    
+
     try:
         turns = int(turns)
     except ValueError:
@@ -32,28 +32,62 @@ def validate_turns(turns):
             errors.append('Minimum number of turns: 1')
         else:
             is_valid = True
-    
+
     result.extend([is_valid, errors])
     return result
 
 
-def main():
-    
-    # Start Game
-    graphics.print_intro()
-    
-    # Ask turn number
-    answer_turn = True
-    while answer_turn:
+def turns_to_play():
+    answer_turns = True
+    while answer_turns:
         turns = input('\nHow many turns do you want to play: ')
         valid_user_input = validate_turns(turns)
         if valid_user_input[0]:
-            answer_turn = False
+            answer_turns = False
         else:
-            print([error for error in valid_user_input[1]])
+            [print(error) for error in valid_user_input[1]]
+    return turns
 
-    # Convert turns to 2 players' turns
-    turns = int(turns) * 2
+
+def init_board():
+    '''
+    Initialize the board
+        @return list 10x10 grid as the initial board 
+    '''
+    board = []
+    for x in range(10):
+        board.append(['O'] * 10)
+    return board
+
+
+def create_allowed_coords():
+    '''
+    Creates a list with default values for the allowed coordinates, used in placement phase
+        @return list List of list of x, y values
+    '''
+    coords = []
+    return [[coords.append([i, j]) for j in range(10)] for i in range(10)]
+    #for i in range(10):
+    #    for j in range(10):
+    #        coords.append([i, j])
+    #return coords
+
+
+def main():
+
+    # Start Game
+    graphics.print_intro()
+
+    # Ask turn number and convert it to 2 players' turns
+    turns = int(turns_to_play()) * 2
+
+    # Create board for both players
+    board_p1 = init_board()
+    board_p2 = init_board()
+
+    # Create allowed_coords list for both users
+    allowed_coords_p1 = create_allowed_coords()
+    allowed_coords_p2 = create_allowed_coords()
 
     # Players place ships
     print('\nPlayer 1 place your ships: ')
@@ -88,7 +122,6 @@ def main():
                 break
 
 
-
 if __name__ == '__main__':
     main()
 
@@ -96,3 +129,4 @@ if __name__ == '__main__':
 '''
 - init_board function modified --> board has become a local variable instead of global variable, change main accordingly
 - graphics.print_outro() --> define more thoroughly
+'''

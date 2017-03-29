@@ -15,17 +15,6 @@ def print_intro():
     print('\n')
 
 
-def init_board():
-    '''
-    Initialize the board
-        @return list 10x10 grid as the initial board 
-    '''
-    board = []
-    for x in range(10):
-        board.append(['O'] * 10)
-        return board
-
-
 def print_board(board):
     '''
     Print the board

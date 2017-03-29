@@ -1,23 +1,70 @@
+from random import randint
+import math
 
 
+letters = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9}
+inv_letters = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'J'}
+allowed_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+allowed_numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+## Functions
+
+##
+# Print the board
+#
+# return void
+##
+def print_board(board):
+    print('\n')
+    h = 0
+    print('     1   2   3   4   5   6   7   8   9   10 ')
+    for row in board:
+        print('   ' + '-' * 41)
+        print(' ' + allowed_letters[h] + ' | ' + ' | '.join(row) + ' |')
+        h += 1
+    print('   ' + '-' * 41 + '\n')
 
 
+##
+# AI places ship randomly - row coordinate
+#
+# return int Row coordinate
+##
+def ai_random_row(board):
+    return randint(0, len(board) - 1)
 
 
+##
+# AI places ship randomly - column coordinate
+#
+# return int Column coordinate
+##
+def ai_random_col(board):
+    return randint(0, len(board[0]) - 1)
 
 
+##
+# AI places ship randomly - column coordinate
+#
+# return int Column coordinate
+##
+def init_board(board):
+    for x in range(10):
+        board.append(['O'] * 10)
 
 
-
-
-
-
-
-
+##
+# Ask user to make a guess, ask for (x,y) coords
+#
+# return list Row and Column coordinates to shoot to, provided by user
+##
 def user_guess():
     '''
-    Ask user to make a guess, ask for (x,y) coords
-        @return list Row and Column coordinates to shoot to, provided by user
+    user_guess = []
+    user_guess_row = int(input('Enter your guess for the Row: '))
+    user_guess.append(user_guess_row - 1)
+    user_guess_col = int(input('Enter your guess for the Column: '))
+    user_guess.append(user_guess_col - 1)
     '''
     user_guess = []
     while True:
@@ -25,7 +72,7 @@ def user_guess():
             user_guess_coord = input("Enter coords for your shot: ") # A1 -> 00, J10 -> 99
             if user_guess_coord == 'exit' or user_guess_coord == 'quit':
                 break
-            elif user_guess_coord[:1].upper() not in ALLOWED_LETTERS or int(user_guess_coord[1:3]) not in ALLOWED_NUMBERS or len(user_guess_coord) > 3:
+            elif user_guess_coord[:1].upper() not in allowed_letters or int(user_guess_coord[1:3]) not in allowed_numbers or len(user_guess_coord) > 3:
                 print('Invalid format! A-J and 1-10 are allowed. Example: A1, C3, F10')
                 raise ValueError
             else:
@@ -61,7 +108,7 @@ def evaluate_guess(shootTo, board, ship):
             print('Target hit!')
             board[shootTo[0]][shootTo[1]] = 'H'
             if check_sunk(ship, shootTo):             # check if ship is sunk
-                print('Target sunk!')
+                print('Target sunk!')      
             if check_all_sunk(ship):         # check if all ships are sunk
                 print('You win! You\'ve just sunk all my ships!')
                 print('Game Over')
@@ -145,7 +192,7 @@ def place_ship_xy(size, ship_name, player):
                 ship_answer = input('Enter #' + str(coords + 1) + ' coordinates for your ' + ship_name + ' (size ' + str(size) + '): ')
                 if ship_answer == 'exit' or ship_answer == 'quit':
                     break
-                elif ship_answer[:1].upper() not in ALLOWED_LETTERS or int(ship_answer[1:3]) not in ALLOWED_NUMBERS or len(ship_answer) > 3:
+                elif ship_answer[:1].upper() not in allowed_letters or int(ship_answer[1:3]) not in allowed_numbers or len(ship_answer) > 3:
                     print('Invalid format! A-J and 1-10 are allowed. Example: A1, C3, F10')
                     raise ValueError
                 else:
@@ -284,7 +331,6 @@ def check_all_sunk(ships):
 # @return int The number value for the string key
 ##
 def convert_letter(letter):
-    letters = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9}
     return int(letters[letter])
 
 
@@ -296,8 +342,7 @@ def convert_letter(letter):
 # @return str The letter for the given int value
 ##
 def convert_coords(coord):
-    inv_letters = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'J'}
-    return str(inv_letters[coord])
+   return str(inv_letters[coord])
 
 
 ##
@@ -355,5 +400,74 @@ init_board(board_p2)
 allowed_coords_p1 = create_allowed_coords()
 allowed_coords_p2 = create_allowed_coords()
 
+# Start Game
+print('\nBattleship Game\n')
+print(' __________         __    __  .__                .__    .__')
+print(' \______   \_____ _/  |__/  |_|  |   ____   _____|  |__ |__|_____')  
+print('  |    |  _/\__  \\   __\   __\   | _/ __ \ /  ___/  |  \|  \____ \ ') 
+print('  |    |   \ / __ \|  |  |  | |  |_\  ___/ \___ \|   Y  \  |  |_> >')
+print('  |______  /(____  /__|  |__| |____/\___  >____  >___|  /__|   __/ ')
+print('         \/      \/                     \/     \/     \/   |__|    ')
+print('\n')
+
+while True:
+    try:
+        turns = input('How many turns do you want to play: ')
+        if turns == 'exit' or turns == 'quit':
+            break
+        turns = int(turns) * 2
+        if turns > 10000:
+            print('Maximum number of turns: 1000')
+            raise ValueError
+        elif turns < 1:
+            print('Minimum number of turns: 1')
+            raise ValueError
+        break
+    except ValueError:
+        print('Please specify a number between 1-10000! (Enter exit or quit if you want to finish the game')
+    except:
+        print('\nAn error occured.')
+    finally:
+        if turns == 'exit' or turns == 'quit':
+            exit()
+
+# Players place ships - example for coords: 11
+print('\n')
+print('Player 1 place your ships: ')
+
+ships_p1 = create_ships(1)
+
+print('\n')
+print('Player 2 place your ships: ')
+
+ships_p2 = create_ships(2)
+
+print('\n')
+
+
+# Begin Turns
+for turn in range(turns):
+    
+    if turn % 2 == 0:       # player1
+        print_board(board_p1)
+        print('Turn', math.ceil((turn + 1) / 2))
+        print('Hello Player 1!')
+        # Ask user for a guess
+        shootTo = []
+        shootTo = user_guess()
+        # Evaluate user guess
+        if evaluate_guess(shootTo, board_p1, ships_p2):
+            break
+    else:                   # player2
+        print_board(board_p2)
+        print('Turn', math.ceil((turn + 1) / 2))
+        print('Hello Player 2!')
+        # Ask user for a guess
+        shootTo = []
+        shootTo = user_guess()
+        # Evaluate user guess
+        if evaluate_guess(shootTo, board_p2, ships_p1):
+            break
+    
 
 

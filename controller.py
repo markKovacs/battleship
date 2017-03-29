@@ -1,16 +1,11 @@
+import graphics
+import sys
 
-##
-# Ask user to make a guess, ask for (x,y) coords
-#
-# return list Row and Column coordinates to shoot to, provided by user
-##
 def user_guess():
     '''
-    user_guess = []
-    user_guess_row = int(input('Enter your guess for the Row: '))
-    user_guess.append(user_guess_row - 1)
-    user_guess_col = int(input('Enter your guess for the Column: '))
-    user_guess.append(user_guess_col - 1)
+    Ask user to make a guess, ask for (x,y) coords
+        @return list Row and Column coordinates to shoot to, provided by user
+
     '''
     user_guess = []
     while True:
@@ -65,7 +60,7 @@ def evaluate_guess(shootTo, board, ship):
     if turn == turns - 1:                # check game end
         print('Game Over.')
         return True
-    print_board(board)
+    graphics.print_board(board)
     return False
 
 
@@ -179,7 +174,7 @@ def place_ship_xy(size, ship_name, player):
             except ValueError:
                 print('Please enter the coordinates again.')
             except:
-                print('\nAn error occured. You can enter exit or quit to end the game.')
+                print('\nAn error occured. You can enter exit or quit to end the game.', sys.exc_info()[0])
             finally:
                 if ship_answer == 'exit' or ship_answer == 'quit':
                     exit()

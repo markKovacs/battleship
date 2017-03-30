@@ -1,5 +1,6 @@
 import math
 import graphics
+import controller
 
 # Global variables
 ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -49,29 +50,8 @@ def turns_to_play():
     return turns
 
 
-def init_board():
-    '''
-    Initialize the board
-        @return list 10x10 grid as the initial board 
-    '''
-    board = []
-    for x in range(10):
-        board.append(['O'] * 10)
-    return board
-
-
-def create_allowed_coords():
-    '''
-    Creates a list with default values for the allowed coordinates, used in placement phase
-        @return list List of list of x, y values
-    '''
-    coords = []
-    return [[coords.append([i, j]) for j in range(10)] for i in range(10)]
-    #for i in range(10):
-    #    for j in range(10):
-    #        coords.append([i, j])
-    #return coords
-
+def print_outro(winner):
+    exit()
 
 def main():
 
@@ -81,52 +61,67 @@ def main():
     # Ask turn number and convert it to 2 players' turns
     turns = int(turns_to_play()) * 2
 
-    # Create board for both players
-    board_p1 = init_board()
-    board_p2 = init_board()
-
-    # Create allowed_coords list for both users
-    allowed_coords_p1 = create_allowed_coords()
-    allowed_coords_p2 = create_allowed_coords()
+    # Create board for both players - used for tracking players' guesses
+    board_p1 = graphics.init_board()
+    board_p2 = graphics.init_board()
 
     # Players place ships
     print('\nPlayer 1 place your ships: ')
-    ships_p1 = create_ships(1)
+    ships_p1 = controller.create_ships()
 
     print('\nPlayer 2 place your ships: ')
-    ships_p2 = create_ships(2)
+    ships_p2 = controller.create_ships()
 
     print('\n')
 
     # Begin Turns
     for turn in range(turns):
-        if turn % 2 == 0:       # player1
-            print_board(board_p1)
+        if turn % 2 == 0:   # player1
+            graphics.print_board(board_p1)
             print('Turn', math.ceil((turn + 1) / 2))
             print('Hello Player 1!')
-            # Ask user for a guess
-            shootTo = []
-            shootTo = user_guess()
-            # Evaluate user guess
-            if evaluate_guess(shootTo, board_p1, ships_p2):
+
+            shootTo = controller.user_guess()
+
+            evaluate_shootTo = controller.evaluate_guess(shootTo, board_p1, ships_p2)
+
+            if evaluate_shootTo[0]:
+                board_p1 = evaluate_shootTo[1]
+                graphics.print_board(board_p1)
+                winner = 1
                 break
-        else:                   # player2
-            print_board(board_p2)
+            else:
+                board_p1 = evaluate_shootTo[1]
+                graphics.print_board(board_p1)
+        else:   # player2
+            graphics.print_board(board_p2)
             print('Turn', math.ceil((turn + 1) / 2))
             print('Hello Player 2!')
-            # Ask user for a guess
-            shootTo = []
-            shootTo = user_guess()
-            # Evaluate user guess
-            if evaluate_guess(shootTo, board_p2, ships_p1):
+
+            shootTo = controller.user_guess()
+
+            evaluate_shootTo = controller.evaluate_guess(shootTo, board_p1, ships_p2)
+
+            if evaluate_shootTo[0]:
+                board_p2 = evaluate_shootTo[1]
+                graphics.print_board(board_p2)
+                winner = 2
                 break
+            else:
+                board_p2 = evaluate_shootTo[1]
+                graphics.print_board(board_p2)
+
+        if turn == turns - 1:   # check game end
+            winner = 3
+            break
+
+    if winner == 1 or winner == 2:
+        print('Game over! Player {} wins!'.format(winner))
+    else:
+        print("Game over! It's a draw!")
+
+    graphics.print_outro(winner)
 
 
 if __name__ == '__main__':
     main()
-
-
-'''
-- init_board function modified --> board has become a local variable instead of global variable, change main accordingly
-- graphics.print_outro() --> define more thoroughly
-'''

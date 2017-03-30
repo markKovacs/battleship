@@ -1,4 +1,8 @@
 
+# Global variables
+ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+ALLOWED_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 
 def get_touching_coords(coord):
     '''
@@ -27,7 +31,8 @@ def get_touching_coords(coord):
         touching.extend([[coord[0] - 1, 9], [coord[0] + 1, 9], [coord[0], 8]])
     # inside the board
     else:
-        touching.extend([[coord[0], coord[1] - 1], [coord[0], coord[1] + 1], [coord[0] - 1, coord[1]], [coord[0] + 1, coord[1]]])
+        touching.extend([[coord[0], coord[1] - 1], [coord[0], coord[1] + 1],
+                        [coord[0] - 1, coord[1]], [coord[0] + 1, coord[1]]])
     return touching
 
 
@@ -77,7 +82,7 @@ def check_sunk(ships, shootTo):
     shootTo[2] = False
     for ship in range(len(ships)):
         for coords in range(len(ships[ship])):
-            if shootTo in ships[ship] and ships[ship][coords][2] == True:
+            if shootTo in ships[ship] and ships[ship][coords][2] is True:
                 return False
     return True
 
@@ -90,7 +95,219 @@ def check_all_sunk(ships):
     '''
     for ship in range(len(ships)):
         for coords in range(len(ships[ship])):
-            if ships[ship][coords][2] == True:
+            if ships[ship][coords][2] is True:
                 return False
     return True
 
+
+def place_ship_xy(size, ship_name, allowed_coords):
+    '''
+    User places ship
+        @param size        int       Size of the ship to be created
+        @param ship_name   string    Nice name of the ship
+        @return            list      Return ship with x, y coords and a True as part of the list
+    '''
+    ship_xy = []
+    result = []
+    answer_coord = True
+    for coords in range(size):
+        break_coords_input = True
+        while answer_coord:
+            # Put together a list that contains the next allowed coordinates
+            if coords > 0:
+                # Get neighbour coords of last coord
+                previous_coords = [ship_xy[coords - 1][0], ship_xy[coords - 1][1]]
+                neighbour_coords = get_touching_coords(previous_coords)
+                # Remove elements from the neighbour coords that are not in the allowed_coords
+                neighbour_coords_mod = [coord for coord in neighbour_coords if coord in allowed_coords]
+                # if there is no allowed space...
+                if len(neighbour_coords_mod) == 0:
+                    print('Unfortunately you cannot place this ship, please start again!')
+                    # return with 'again'
+                    ship_xy = 'again'
+                    answer_coord = False
+                    break_coords_input = False
+                else:
+                    print('\nYour next coordinate must be touching the previous one horizantally or vertically,',
+                          'so you can choose from the following coordinates:')
+                    # we need to convert the coords back to letters
+                    choose_coords = [convert_coords(coord[0]) + str(coord[1] + 1) for coord in neighbour_coords_mod]
+                    print(', '.join(choose_coords), '\n')
+
+            ship_answer = input('Enter #' + str(coords + 1) +
+                                ' coordinates for your ' + ship_name + ' (size ' + str(size) + '): ')
+            is_valid_ship_answer = validate_ship_answer(ship_answer)
+            if is_valid_ship_answer[0]:
+                valid_coords = [convert_letter(ship_answer[:1].upper()), int(ship_answer[1:3]) - 1]
+                if coords == 0:
+                    if valid_coords in allowed_coords:
+                        allowed_coords.remove(valid_coords)
+                        valid_coords.append(True)
+                        ship_xy.append(valid_coords)
+                        break
+                    else:
+                        print('This coordinate is already occupied!')
+                else:
+                    if valid_coords in neighbour_coords_mod:
+                        allowed_coords.remove(valid_coords)
+                        valid_coords.append(True)
+                        ship_xy.append(valid_coords)
+                        break
+                    else:
+                        print('This coordinate is not among the allowed coordinates!')
+            else:
+                [print(error) for error in is_valid_ship_answer[1]]
+        # finish placing coords because ship can't be placed
+        if break_coords_input is False:
+            break
+    if break_coords_input is True:
+        print('\nShip {} completed!\n\n'.format(ship_name))
+
+    result.extend([ship_xy, allowed_coords])
+    return result
+
+
+def validate_ship_answer(ship_answer):
+    is_valid = False
+    errors = []
+    result = []
+
+    if ship_answer == 'exit' or ship_answer == 'quit':
+        graphics.print_outro()
+
+    try:
+        ship_y = int(ship_answer[1:3])
+    except ValueError:
+        errors.append('Invalid format. Please try again.')
+    except:
+        error.append('Unexpected error. Try again or enter exit or quit to finish the game.')
+    else:
+        if (ship_answer[:1].upper() not in ALLOWED_LETTERS or
+                int(ship_answer[1:3]) not in ALLOWED_NUMBERS or len(ship_answer) > 3):
+            errors.append('Invalid format! A-J and 1-10 are allowed. Example: A1, C3, F10')
+        else:
+            is_valid = True
+
+    result.extend([is_valid, errors])
+    return result
+
+
+def create_allowed_coords():
+    '''
+    Creates a list with default values for the allowed coordinates, used in placement phase
+        @return list List of list of x, y values
+    '''
+    return [[i, j] for i in range(10) for j in range(10)]
+
+
+def create_ships():
+    '''
+    Create all ships for one player
+        @param player int Player 1 or Player 2
+        @return list List of lists of all ships that belong to one player
+    '''
+    ships = []
+    allowed_coords = create_allowed_coords()
+
+    for count, ship_size in enumerate([5, 4, 3, 3, 2]):
+        # set ship names
+        if count == 0:
+            ship_name = 'Carrier'
+        elif count == 1:
+            ship_name = 'Battleship'
+        elif count == 2:
+            ship_name = 'Cruiser'
+        elif count == 3:
+            ship_name = 'Submarine'
+        else:
+            ship_name = 'Destroyer'
+
+        ship_to_be = 'again'
+        while ship_to_be == 'again':
+            ship_to_be = place_ship_xy(ship_size, ship_name, allowed_coords)
+            allowed_coords = ship_to_be[1]
+            if ship_to_be[0] != 'again':
+                ships.append(ship_to_be)
+
+    return ships
+
+
+def user_guess():
+    '''
+    Ask user to make a guess, ask for (x,y) coords
+        @return   list   Row and Column coordinates to shoot to, provided by user
+    '''
+    user_guess = []
+    answer_shootTo = True
+    while answer_shootTo:
+        user_guess_coord = input("Enter coords for your shot: ")
+        valid_user_guess = validate_user_guess(user_guess_coord)
+        if valid_user_guess[0]:
+            user_guess.extend([convert_letter(user_guess_coord[:1].upper()), int(user_guess_coord[1:3]) - 1])
+            answer_shootTo = False
+        else:
+            [print(error) for error in valid_user_input[1]]
+    return user_guess
+
+
+def validate_user_guess(user_guess_coord):
+
+    is_valid = False
+    errors = []
+    result = []
+
+    if turns == 'exit' or turns == 'quit':
+        graphics.print_outro()
+    elif (user_guess_coord[:1].upper() not in ALLOWED_LETTERS or
+          int(user_guess_coord[1:3]) not in ALLOWED_NUMBERS or
+          len(user_guess_coord) > 3):
+        errors.append('Invalid format! A-J and 1-10 are allowed. Example: A1, C3, F10')
+    else:
+        is_valid = True
+
+    result.extend([is_valid, errors])
+    return result
+
+
+def get_sunk_ship(shootTo, ships):
+    for index, ship in enumerate(ships):
+        if shootTo in ship:
+            return index
+
+
+def evaluate_guess(shootTo, board, ship):
+    '''
+    Evaluate user guess (hit or miss or else)
+        @param shootTo    list   Shooting coords provided by user
+        @param board      list   Player Board
+        @param ship       list   List of ships' coords on the map
+        @return           bool   False if game ends, otherwise True
+    '''
+    target_shot = board[shootTo[0]][shootTo[1]]
+    result = []
+    status = False
+    if shootTo[0] not in range(10) or shootTo[1] not in range(10):    # check if shot is on the board
+            print('That\'s out of range.')
+    elif (target_shot == 'M' or
+          target_shot == 'H' or
+          target_shot == 'S'):    # check if guess was already made before
+        print('You guessed that already. Pay attention next turn!')
+    else:
+        if check_hit(ship, shootTo):
+            print('Target hit!')
+            board[shootTo[0]][shootTo[1]] = 'H'
+            if check_sunk(ship, shootTo):             # check if ship is sunk
+                print('Target sunk!')
+                sunk_ship = get_sunk_ship(shootTo, ship)
+                for x, y in ship[sunk_ship]:
+                    board[x][y] = color_sunk + 'S' + color_sea
+            if check_all_sunk(ship):         # check if all ships are sunk
+                print('You win! You\'ve just sunk all my ships!')
+                print('Game Over')
+                status = True
+        else:                            # missed shot
+            print('You missed it!')
+            board[shootTo[0]][shootTo[1]] = 'M'
+
+    result.extend([status, board])
+    return result

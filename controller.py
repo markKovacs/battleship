@@ -83,11 +83,12 @@ def check_sunk(ships, shootTo):
         @return bool True if the ship sunk, otherwise False
     '''
     shootTo[2] = False
+    status = True
     for ship in range(len(ships)):
         for coords in range(len(ships[ship])):
             if shootTo in ships[ship] and ships[ship][coords][2] is True:
-                return False
-    return True
+                status = False
+    return status
 
 
 def check_all_sunk(ships):
@@ -96,11 +97,12 @@ def check_all_sunk(ships):
         @param ships list List of ships
         @return bool True if all sunk, otherwise False
     '''
+    status = True
     for ship in range(len(ships)):
         for coords in range(len(ships[ship])):
             if ships[ship][coords][2] is True:
-                return False
-    return True
+                status = False
+    return status
 
 
 def place_ship_xy(size, ship_name, allowed_coords):
@@ -231,7 +233,7 @@ def create_ships():
             ship_to_be = place_ship_xy(ship_size, ship_name, allowed_coords)
             allowed_coords = ship_to_be[1]
             if ship_to_be[0] != 'again':
-                ships.append(ship_to_be)
+                ships.append(ship_to_be[0])
 
     return ships
 
@@ -298,16 +300,17 @@ def evaluate_guess(shootTo, board, ship):
         print('You guessed that already. Pay attention next turn!')
     else:
         ship_hit = check_hit(ship, shootTo)
+        print(ship_hit)
         ship = ship_hit[1]
         if ship_hit[0]:
             print('Target hit!')
             board[shootTo[0]][shootTo[1]] = 'H'
-            if check_sunk(ship, shootTo):             # check if ship is sunk
+            if check_sunk(ship, shootTo):
                 print('Target sunk!')
                 sunk_ship = get_sunk_ship(shootTo, ship)
                 for x, y in ship[sunk_ship]:
                     board[x][y] = color_sunk + 'S' + color_sea
-            if check_all_sunk(ship):         # check if all ships are sunk
+            if check_all_sunk(ship):
                 print('You win! You\'ve just sunk all my ships!')
                 print('Game Over')
                 status = True

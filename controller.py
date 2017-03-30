@@ -109,9 +109,9 @@ def place_ship_xy(size, ship_name, allowed_coords):
     '''
     ship_xy = []
     result = []
-    answer_coord = True
+    break_coords_input = True
     for coords in range(size):
-        break_coords_input = True
+        answer_coord = True
         while answer_coord:
             # Put together a list that contains the next allowed coordinates
             if coords > 0:
@@ -125,8 +125,9 @@ def place_ship_xy(size, ship_name, allowed_coords):
                     print('Unfortunately you cannot place this ship, please start again!')
                     # return with 'again'
                     ship_xy = 'again'
-                    answer_coord = False
                     break_coords_input = False
+                    answer_coord = False
+                    break
                 else:
                     print('\nYour next coordinate must be touching the previous one horizantally or vertically,',
                           'so you can choose from the following coordinates:')
@@ -146,7 +147,7 @@ def place_ship_xy(size, ship_name, allowed_coords):
                         ship_xy.append(valid_coords)
                         break
                     else:
-                        print('This coordinate is already occupied!')
+                        print('This coordinate is already occupied or not allowed!')
                 else:
                     if valid_coords in neighbour_coords_mod:
                         allowed_coords.remove(valid_coords)
@@ -164,6 +165,7 @@ def place_ship_xy(size, ship_name, allowed_coords):
         print('\nShip {} completed!\n\n'.format(ship_name))
 
     result.extend([ship_xy, allowed_coords])
+    print(result)
     return result
 
 
@@ -222,8 +224,8 @@ def create_ships():
         else:
             ship_name = 'Destroyer'
 
-        ship_to_be = 'again'
-        while ship_to_be == 'again':
+        ship_to_be = ['again']
+        while ship_to_be[0] == 'again':
             ship_to_be = place_ship_xy(ship_size, ship_name, allowed_coords)
             allowed_coords = ship_to_be[1]
             if ship_to_be[0] != 'again':

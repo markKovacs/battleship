@@ -1,6 +1,11 @@
+
+import vlc
 import math
+import time
 import graphics
 import controller
+import intro
+import outro
 
 # Global variables
 ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -18,7 +23,7 @@ def validate_turns(turns):
     result = []
 
     if turns == 'exit' or turns == 'quit':
-        graphics.print_outro()
+        outro.print_outro()
 
     try:
         turns = int(turns)
@@ -50,13 +55,14 @@ def turns_to_play():
     return turns
 
 
-def print_outro(winner):
-    exit()
-
 def main():
 
     # Start Game
     graphics.print_intro()
+
+    # Player 1 and 2 name
+    p1_name = 'Peter'
+    p2_name = 'Mark'
 
     # Ask turn number and convert it to 2 players' turns
     turns = int(turns_to_play()) * 2
@@ -77,9 +83,9 @@ def main():
     # Begin Turns
     for turn in range(turns):
         if turn % 2 == 0:   # player1
-            graphics.print_board(board_p1)
-            print('Turn', math.ceil((turn + 1) / 2))
-            print('Hello Player 1!')
+
+            graphics.print_board(board_p1, p1_name)
+            print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p1_name))
 
             shootTo = controller.user_guess()
 
@@ -87,16 +93,17 @@ def main():
 
             if evaluate_shootTo[0]:
                 board_p1 = evaluate_shootTo[1]
-                graphics.print_board(board_p1)
+                graphics.print_board(board_p1, p1_name)
                 winner = 1
                 break
             else:
                 board_p1 = evaluate_shootTo[1]
-                graphics.print_board(board_p1)
+                graphics.print_board(board_p1, p1_name)
         else:   # player2
-            graphics.print_board(board_p2)
-            print('Turn', math.ceil((turn + 1) / 2))
-            print('Hello Player 2!')
+            graphics.print_board(board_p2, p2_name)
+            print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p2_name))
+            # print('Turn', math.ceil((turn + 1) / 2))
+            # print('Hello Player 2!')
 
             shootTo = controller.user_guess()
 
@@ -104,23 +111,25 @@ def main():
 
             if evaluate_shootTo[0]:
                 board_p2 = evaluate_shootTo[1]
-                graphics.print_board(board_p2)
+                graphics.print_board(board_p2, p2_name)
                 winner = 2
                 break
             else:
                 board_p2 = evaluate_shootTo[1]
-                graphics.print_board(board_p2)
+                graphics.print_board(board_p2, p2_name)
 
         if turn == turns - 1:   # check game end
             winner = 3
             break
 
-    if winner == 1 or winner == 2:
-        print('Game over! Player {} wins!'.format(winner))
-    else:
+    if winner == 1:
+        print('Game over! {} won!'.format(p1_name))
+    elif winner == 2:
+        print('Game over! {} won!'.format(p2_name))
+    elif winner == 3:
         print("Game over! It's a draw!")
 
-    graphics.print_outro(winner)
+    outro.print_outro()
 
 
 if __name__ == '__main__':

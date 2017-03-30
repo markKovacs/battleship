@@ -91,14 +91,12 @@ def main():
             shootTo = controller.user_guess()
 
             evaluate_shootTo = controller.evaluate_guess(shootTo, board_p1, ships_p2)
-
+            board_p1 = evaluate_shootTo[1]
             if evaluate_shootTo[0]:
-                board_p1 = evaluate_shootTo[1]
                 graphics.print_board(board_p1, p2_name)
                 winner = 1
                 break
             else:
-                board_p1 = evaluate_shootTo[1]
                 graphics.print_board(board_p1, p2_name)
         else:   # player2
             graphics.print_board(board_p2, p1_name)
@@ -108,15 +106,13 @@ def main():
 
             shootTo = controller.user_guess()
 
-            evaluate_shootTo = controller.evaluate_guess(shootTo, board_p2, ships_p2)
-
+            evaluate_shootTo = controller.evaluate_guess(shootTo, board_p2, ships_p1)
+            board_p2 = evaluate_shootTo[1]
             if evaluate_shootTo[0]:
-                board_p2 = evaluate_shootTo[1]
                 graphics.print_board(board_p2, p1_name)
                 winner = 2
                 break
             else:
-                board_p2 = evaluate_shootTo[1]
                 graphics.print_board(board_p2, p1_name)
 
         if turn == turns - 1:   # check game end

@@ -108,7 +108,7 @@ def main():
 
             shootTo = controller.user_guess()
 
-            evaluate_shootTo = controller.evaluate_guess(shootTo, board_p1, ships_p2)
+            evaluate_shootTo = controller.evaluate_guess(shootTo, board_p2, ships_p2)
 
             if evaluate_shootTo[0]:
                 board_p2 = evaluate_shootTo[1]

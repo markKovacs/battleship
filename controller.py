@@ -63,13 +63,16 @@ def check_hit(ships, shootTo):
         @param shootTo list List of shoot coords
         @return bool True if hit, otherwise False
     '''
+    result = []
     shootTo.append(True)
+    hit_status = False
     for ship in range(len(ships)):
         for coords in range(len(ships[ship])):
             if shootTo in ships[ship] and ships[ship][coords][0] == shootTo[0] and ships[ship][coords][1] == shootTo[1]:
                 ships[ship][coords][2] = False
-                return True
-    return False
+                hit_status = True
+    result.extend([hit_status, ships])
+    return result
 
 
 def check_sunk(ships, shootTo):
@@ -294,7 +297,9 @@ def evaluate_guess(shootTo, board, ship):
           target_shot == 'S'):    # check if guess was already made before
         print('You guessed that already. Pay attention next turn!')
     else:
-        if check_hit(ship, shootTo):
+        ship_hit = check_hit(ship, shootTo)
+        ship = ship_hit[1]
+        if ship_hit[0]:
             print('Target hit!')
             board[shootTo[0]][shootTo[1]] = 'H'
             if check_sunk(ship, shootTo):             # check if ship is sunk

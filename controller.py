@@ -165,7 +165,6 @@ def place_ship_xy(size, ship_name, allowed_coords):
         print('\nShip {} completed!\n\n'.format(ship_name))
 
     result.extend([ship_xy, allowed_coords])
-    print(result)
     return result
 
 
@@ -175,7 +174,7 @@ def validate_ship_answer(ship_answer):
     result = []
 
     if ship_answer == 'exit' or ship_answer == 'quit':
-        graphics.print_outro()
+        outro.print_outro()
 
     try:
         ship_y = int(ship_answer[1:3])
@@ -258,8 +257,8 @@ def validate_user_guess(user_guess_coord):
     errors = []
     result = []
 
-    if turns == 'exit' or turns == 'quit':
-        graphics.print_outro()
+    if user_guess_coord == 'exit' or user_guess_coord == 'quit':
+        outro.print_outro()
     elif (user_guess_coord[:1].upper() not in ALLOWED_LETTERS or
           int(user_guess_coord[1:3]) not in ALLOWED_NUMBERS or
           len(user_guess_coord) > 3):

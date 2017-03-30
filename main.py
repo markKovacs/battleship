@@ -3,9 +3,10 @@ import vlc
 import math
 import time
 import graphics
-import controller
 import intro
 import outro
+import controller
+
 
 # Global variables
 ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -84,7 +85,7 @@ def main():
     for turn in range(turns):
         if turn % 2 == 0:   # player1
 
-            graphics.print_board(board_p1, p1_name)
+            graphics.print_board(board_p1, p2_name)
             print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p1_name))
 
             shootTo = controller.user_guess()
@@ -93,14 +94,14 @@ def main():
 
             if evaluate_shootTo[0]:
                 board_p1 = evaluate_shootTo[1]
-                graphics.print_board(board_p1, p1_name)
+                graphics.print_board(board_p1, p2_name)
                 winner = 1
                 break
             else:
                 board_p1 = evaluate_shootTo[1]
-                graphics.print_board(board_p1, p1_name)
+                graphics.print_board(board_p1, p2_name)
         else:   # player2
-            graphics.print_board(board_p2, p2_name)
+            graphics.print_board(board_p2, p1_name)
             print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p2_name))
             # print('Turn', math.ceil((turn + 1) / 2))
             # print('Hello Player 2!')
@@ -111,12 +112,12 @@ def main():
 
             if evaluate_shootTo[0]:
                 board_p2 = evaluate_shootTo[1]
-                graphics.print_board(board_p2, p2_name)
+                graphics.print_board(board_p2, p1_name)
                 winner = 2
                 break
             else:
                 board_p2 = evaluate_shootTo[1]
-                graphics.print_board(board_p2, p2_name)
+                graphics.print_board(board_p2, p1_name)
 
         if turn == turns - 1:   # check game end
             winner = 3

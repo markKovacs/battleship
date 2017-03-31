@@ -44,6 +44,28 @@ def validate_turns(turns):
     return result
 
 
+def enter_name(player):
+    '''
+    Ask user for his name during the game
+        @param player   int   player number, 1 or 2
+        @return player_name Name chosen by the user
+    '''
+    try:
+        player_name = input('Player {}, please enter your name: '.format(player))
+    except:
+        player_name = 'Player ' + player
+    return player_name
+
+
+def play_sound(sound_name, sleep_before=0, sleep_after=0):
+    try:
+        time.sleep(sleep_before)
+        vlc.MediaPlayer(sound_name + ".wav").play()
+        time.sleep(sleep_after)
+    except:
+        pass
+
+
 def turns_to_play():
     answer_turns = True
     while answer_turns:
@@ -59,11 +81,11 @@ def turns_to_play():
 def main():
 
     # Start Game
-    graphics.print_intro()
+    intro.print_intro()
 
     # Player 1 and 2 name
-    p1_name = 'Peter'
-    p2_name = 'Mark'
+    p1_name = enter_name(1)
+    p2_name = enter_name(2)
 
     # Ask turn number and convert it to 2 players' turns
     turns = int(turns_to_play()) * 2
@@ -84,7 +106,6 @@ def main():
     # Begin Turns
     for turn in range(turns):
         if turn % 2 == 0:   # player1
-
             graphics.print_board(board_p1, p2_name)
             print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p1_name))
 
@@ -92,40 +113,38 @@ def main():
 
             evaluate_shootTo = controller.evaluate_guess(shootTo, board_p1, ships_p2)
             board_p1 = evaluate_shootTo[1]
+            graphics.print_board(board_p1, p2_name)
+
             if evaluate_shootTo[0]:
-                graphics.print_board(board_p1, p2_name)
                 winner = 1
                 break
-            else:
-                graphics.print_board(board_p1, p2_name)
+
         else:   # player2
             graphics.print_board(board_p2, p1_name)
             print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p2_name))
-            # print('Turn', math.ceil((turn + 1) / 2))
-            # print('Hello Player 2!')
 
             shootTo = controller.user_guess()
 
             evaluate_shootTo = controller.evaluate_guess(shootTo, board_p2, ships_p1)
             board_p2 = evaluate_shootTo[1]
+            graphics.print_board(board_p2, p1_name)
+
             if evaluate_shootTo[0]:
                 graphics.print_board(board_p2, p1_name)
                 winner = 2
                 break
-            else:
-                graphics.print_board(board_p2, p1_name)
 
         if turn == turns - 1:   # check game end
-            winner = 3
             break
 
     if winner == 1:
         print('Game over! {} won!'.format(p1_name))
     elif winner == 2:
         print('Game over! {} won!'.format(p2_name))
-    elif winner == 3:
+    else:
         print("Game over! It's a draw!")
 
+    play_sound("victory", sleep_after=8)
     outro.print_outro()
 
 

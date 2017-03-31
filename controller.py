@@ -1,7 +1,15 @@
+import vlc
+from main import play_sound
+from colored import fg, bg, attr
 
 # Global variables
 ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 ALLOWED_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+color_sea = fg('#C0C0C0') + bg('deep_sky_blue_4b')
+color_miss = fg('grey_7') + bg('deep_sky_blue_4b')
+color_hit = fg('orange_red_1') + bg('deep_sky_blue_4b')
+color_sunk = fg('red_1') + bg('deep_sky_blue_4b')
+res = attr('reset')
 
 
 def get_touching_coords(coord):
@@ -134,8 +142,7 @@ def place_ship_xy(size, ship_name, allowed_coords):
                     answer_coord = False
                     break
                 else:
-                    print('\nYour next coordinate must be touching the previous one horizantally or vertically,',
-                          'so you can choose from the following coordinates:')
+                    print('\nChoose from the following coordinates: ')
                     # we need to convert the coords back to letters
                     choose_coords = [convert_coords(coord[0]) + str(coord[1] + 1) for coord in neighbour_coords_mod]
                     print(', '.join(choose_coords), '\n')
@@ -252,7 +259,7 @@ def user_guess():
             user_guess.extend([convert_letter(user_guess_coord[:1].upper()), int(user_guess_coord[1:3]) - 1])
             answer_shootTo = False
         else:
-            [print(error) for error in valid_user_input[1]]
+            [print(error) for error in valid_user_guess[1]]
     return user_guess
 
 
@@ -294,9 +301,9 @@ def evaluate_guess(shootTo, board, ship):
     status = False
     if shootTo[0] not in range(10) or shootTo[1] not in range(10):    # check if shot is on the board
             print('That\'s out of range.')
-    elif (target_shot == 'M' or
-          target_shot == 'H' or
-          target_shot == 'S'):    # check if guess was already made before
+    elif (target_shot == (color_miss + 'M' + color_sea) or
+          target_shot == (color_hit + 'H' + color_sea) or
+          target_shot == (color_sunk + 'S' + color_sea)):    # check if guess was already made before
         print('You guessed that already. Pay attention next turn!')
     else:
         ship_hit = check_hit(ship, shootTo)
@@ -304,11 +311,13 @@ def evaluate_guess(shootTo, board, ship):
         ship = ship_hit[1]
         if ship_hit[0]:
             print('Target hit!')
-            board[shootTo[0]][shootTo[1]] = 'H'
+            play_sound("explosion")
+            board[shootTo[0]][shootTo[1]] = color_hit + 'H' + color_sea
             if check_sunk(ship, shootTo):
                 print('Target sunk!')
+                play_sound("sinking", sleep_before=2)
                 sunk_ship = get_sunk_ship(shootTo, ship)
-                for x, y in ship[sunk_ship]:
+                for x, y, z in ship[sunk_ship]:
                     board[x][y] = color_sunk + 'S' + color_sea
             if check_all_sunk(ship):
                 print('You win! You\'ve just sunk all my ships!')
@@ -316,7 +325,8 @@ def evaluate_guess(shootTo, board, ship):
                 status = True
         else:                            # missed shot
             print('You missed it!')
-            board[shootTo[0]][shootTo[1]] = 'M'
+            play_sound("missed")
+            board[shootTo[0]][shootTo[1]] = color_miss + 'M' + color_sea
 
     result.extend([status, board])
     return result

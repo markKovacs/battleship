@@ -1,4 +1,7 @@
 import time
+import vlc
+from main import play_sound
+
 
 def print_outro():
     '''Prints battleship outro'''
@@ -45,6 +48,7 @@ def print_outro():
                                                                         Created by Peter Juhasz & Mark Kovacs
     """)
     print("\n"*9)
+    play_sound("ship_horn")
     time.sleep(0.35)
 
     print("\n"*100)

@@ -55,10 +55,3 @@ def print_board(board, player):
     print(res + '\t'*8 + ' '*3 + color_player + '╔' + '═'*39 + '╗' + res)
     print(res + '\t'*8 + ' '*3 + color_player + '║' + (str(player) + "'s board").center(39) + '║' + res)
     print(res + '\t'*8 + ' '*3 + color_player + '╚' + '═'*39 + '╝' + res)
-
-
-def print_outro():
-    '''
-    Exit the game.
-    '''
-    exit()

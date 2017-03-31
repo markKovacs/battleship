@@ -3,9 +3,6 @@ import vlc
 import math
 import time
 import graphics
-import intro
-import outro
-import controller
 
 
 # Global variables
@@ -78,6 +75,11 @@ def turns_to_play():
     return turns
 
 
+import intro
+import outro
+import controller
+
+
 def main():
 
     # Start Game
@@ -95,10 +97,10 @@ def main():
     board_p2 = graphics.init_board()
 
     # Players place ships
-    print('\nPlayer 1 place your ships: ')
+    print('\n{}, place your ships: '.format(p1_name))
     ships_p1 = controller.create_ships()
 
-    print('\nPlayer 2 place your ships: ')
+    print('\n{}, place your ships: '.format(p2_name))
     ships_p2 = controller.create_ships()
 
     print('\n')

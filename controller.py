@@ -193,7 +193,7 @@ def validate_ship_answer(ship_answer):
     except ValueError:
         errors.append('Invalid format. Please try again.')
     except:
-        error.append('Unexpected error. Try again or enter exit or quit to finish the game.')
+        errors.append('Unexpected error. Try again or enter exit or quit to finish the game.')
     else:
         if (ship_answer[:1].upper() not in ALLOWED_LETTERS or
                 int(ship_answer[1:3]) not in ALLOWED_NUMBERS or len(ship_answer) > 3):
@@ -271,12 +271,19 @@ def validate_user_guess(user_guess_coord):
 
     if user_guess_coord == 'exit' or user_guess_coord == 'quit':
         outro.print_outro()
-    elif (user_guess_coord[:1].upper() not in ALLOWED_LETTERS or
-          int(user_guess_coord[1:3]) not in ALLOWED_NUMBERS or
-          len(user_guess_coord) > 3):
-        errors.append('Invalid format! A-J and 1-10 are allowed. Example: A1, C3, F10')
+
+    try:
+        user_guess_coord_y = int(ship_answer[1:3])
+    except ValueError:
+        errors.append('Invalid format. Please try again.')
+    except:
+        errors.append('Unexpected error. Try again or enter exit or quit to finish the game.')
     else:
-        is_valid = True
+        if (user_guess_coord[:1].upper() not in ALLOWED_LETTERS or
+                int(user_guess_coord[1:3]) not in ALLOWED_NUMBERS or len(user_guess_coord) > 3):
+            errors.append('Invalid format! A-J and 1-10 are allowed. Example: A1, C3, F10')
+        else:
+            is_valid = True
 
     result.extend([is_valid, errors])
     return result
@@ -307,7 +314,6 @@ def evaluate_guess(shootTo, board, ship):
         print('You guessed that already. Pay attention next turn!')
     else:
         ship_hit = check_hit(ship, shootTo)
-        print(ship_hit)
         ship = ship_hit[1]
         if ship_hit[0]:
             print('Target hit!')

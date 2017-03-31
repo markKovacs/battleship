@@ -279,7 +279,7 @@ def validate_user_guess(user_guess_coord):
         outro.print_outro()
 
     try:
-        user_guess_coord_y = int(ship_answer[1:3])
+        user_guess_coord_y = int(user_guess_coord[1:3])
     except ValueError:
         errors.append('Invalid format. Please try again.')
     except:

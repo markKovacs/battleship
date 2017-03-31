@@ -117,6 +117,7 @@ def main():
             evaluate_shootTo = controller.evaluate_guess(shootTo, board_p1, ships_p2)
             board_p1 = evaluate_shootTo[1]
             graphics.print_board(board_p1, p2_name)
+            time.sleep(1)
 
             if evaluate_shootTo[0]:
                 winner = 1
@@ -132,13 +133,15 @@ def main():
             evaluate_shootTo = controller.evaluate_guess(shootTo, board_p2, ships_p1)
             board_p2 = evaluate_shootTo[1]
             graphics.print_board(board_p2, p1_name)
+            time.sleep(1)
 
             if evaluate_shootTo[0]:
                 graphics.print_board(board_p2, p1_name)
                 winner = 2
                 break
 
-        if turn == turns - 1:   # check game end
+        # check game end
+        if turn == turns - 1:
             break
 
     if winner == 1:
@@ -148,7 +151,7 @@ def main():
     else:
         print("Game over! It's a draw!")
 
-    play_sound("victory", sleep_after=8)
+    # play_sound("victory", sleep_after=8)
     outro.print_outro()
 
 

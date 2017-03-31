@@ -13,7 +13,7 @@ ALLOWED_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 def validate_turns(turns):
     '''
     Validate user input for number of turns
-        @param string turns User input to be validated
+        @param turns   string   User input to be validated
         @return list [True, []] if valid, otherwise [False, [errors]]
     '''
     is_valid = False
@@ -55,6 +55,13 @@ def enter_name(player):
 
 
 def play_sound(sound_name, sleep_before=0, sleep_after=0):
+    '''
+    Play sound via vlc module
+        @sound_name     string   Name of the file to be played without extension
+        @sleep_before   int      Wait x seconds after sound
+        @sleep_after    int      Wait x seconds after sound
+        @return void
+    '''
     try:
         time.sleep(sleep_before)
         vlc.MediaPlayer(sound_name + ".wav").play()
@@ -64,6 +71,10 @@ def play_sound(sound_name, sleep_before=0, sleep_after=0):
 
 
 def turns_to_play():
+    '''
+    Number of turns to be played
+        @return int Number of turns set by the player(s)
+    '''
     answer_turns = True
     while answer_turns:
         turns = input('\nHow many turns do you want to play: ')

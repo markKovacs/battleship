@@ -296,6 +296,12 @@ def validate_user_guess(user_guess_coord):
 
 
 def get_sunk_ship(shootTo, ships):
+    '''
+    Returns which ship is sunk to put S signs on the board
+        @param shootTo list Coordinate chosen by player
+        @param ships list List of all the ships
+        @return int Index of sunk ship
+    '''
     for index, ship in enumerate(ships):
         if shootTo in ship:
             return index

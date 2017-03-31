@@ -59,5 +59,9 @@ def print_board(board, player):
 
 
 def player_turn_ascii(player):
+    '''
+    Print player specific ascii graphics
+        @return void
+    '''
     img = Figlet(font='big', direction='auto', justify='left')
     print(img.renderText("{}'s turn :".format(player)))

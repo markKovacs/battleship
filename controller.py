@@ -227,6 +227,7 @@ def create_ships(player):
     allowed_coords = create_allowed_coords()
 
     for count, ship_size in enumerate([5, 4, 3, 3, 2]):
+        ship_sign = count + 1
         # set ship names
         if count == 0:
             ship_name = 'Carrier'
@@ -246,7 +247,7 @@ def create_ships(player):
             if ship_to_be[0] != 'again':
                 ships.append(ship_to_be[0])
                 for x, y, z in ship_to_be[0]:
-                    board_own[x][y] = (color_miss + 'O' + color_sea)
+                    board_own[x][y] = (color_miss + str(ship_sign) + color_sea)
                 print_board(board_own, player)
     return ships
 

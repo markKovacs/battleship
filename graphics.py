@@ -2,6 +2,7 @@
 import colored
 from colored import fg, bg, attr
 from colored import stylize
+from pyfiglet import Figlet
 
 # Global variables
 ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -55,3 +56,8 @@ def print_board(board, player):
     print(res + '\t'*8 + ' '*3 + color_player + '╔' + '═'*39 + '╗' + res)
     print(res + '\t'*8 + ' '*3 + color_player + '║' + (str(player) + "'s board").center(39) + '║' + res)
     print(res + '\t'*8 + ' '*3 + color_player + '╚' + '═'*39 + '╝' + res)
+
+
+def player_turn_ascii(player):
+    img = Figlet(font='big', direction='auto', justify='left')
+    print(img.renderText("{}'s turn :".format(player)))

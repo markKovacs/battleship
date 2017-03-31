@@ -1,6 +1,9 @@
 import vlc
 from main import play_sound
 from colored import fg, bg, attr
+from graphics import print_board
+from graphics import init_board
+
 
 # Global variables
 ALLOWED_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -213,13 +216,14 @@ def create_allowed_coords():
     return [[i, j] for i in range(10) for j in range(10)]
 
 
-def create_ships():
+def create_ships(player):
     '''
     Create all ships for one player
         @param player int Player 1 or Player 2
         @return list List of lists of all ships that belong to one player
     '''
     ships = []
+    board_own = init_board()
     allowed_coords = create_allowed_coords()
 
     for count, ship_size in enumerate([5, 4, 3, 3, 2]):
@@ -241,7 +245,9 @@ def create_ships():
             allowed_coords = ship_to_be[1]
             if ship_to_be[0] != 'again':
                 ships.append(ship_to_be[0])
-
+                for x, y, z in ship_to_be[0]:
+                    board_own[x][y] = (color_miss + 'O' + color_sea)
+                print_board(board_own, player)
     return ships
 
 

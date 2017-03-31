@@ -98,16 +98,17 @@ def main():
 
     # Players place ships
     print('\n{}, place your ships: '.format(p1_name))
-    ships_p1 = controller.create_ships()
+    ships_p1 = controller.create_ships(p1_name)
 
     print('\n{}, place your ships: '.format(p2_name))
-    ships_p2 = controller.create_ships()
+    ships_p2 = controller.create_ships(p2_name)
 
     print('\n')
 
     # Begin Turns
     for turn in range(turns):
         if turn % 2 == 0:   # player1
+            graphics.player_turn_ascii(p1_name)
             graphics.print_board(board_p1, p2_name)
             print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p1_name))
 
@@ -122,6 +123,7 @@ def main():
                 break
 
         else:   # player2
+            graphics.player_turn_ascii(p2_name)
             graphics.print_board(board_p2, p1_name)
             print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p2_name))
 

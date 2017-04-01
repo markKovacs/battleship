@@ -44,18 +44,18 @@ def print_board(board, player):
     color_player = fg('white')
     res = attr('reset')
     print('\n')
-    print('\t'*8 + ' '*5 + '   '.join([str(number) for number in ALLOWED_NUMBERS]), sep='')
-    print(res + '\t'*8 + ' '*3 + color_sea + '╔' + ('═'*3 + '╦')*9 + '═'*3 + '╗' + res)
+    print(' '*5 + '   '.join([str(number) for number in ALLOWED_NUMBERS]), sep='')
+    print(res + ' '*3 + color_sea + '╔' + ('═'*3 + '╦')*9 + '═'*3 + '╗' + res)
     for count, row in enumerate(board):
-        print(res + '\t'*8 + ' ' + ALLOWED_LETTERS[count] + ' ' + color_sea + '║ ' + ' ║ '.join(row) + ' ║' + res)
+        print(res + ' ' + ALLOWED_LETTERS[count] + ' ' + color_sea + '║ ' + ' ║ '.join(row) + ' ║' + res)
         if count == 9:
-            print(res + '\t'*8 + ' '*3 + color_sea + '╚' + ('═'*3 + '╩')*9 + '═'*3 + '╝' + res)
+            print(res + ' '*3 + color_sea + '╚' + ('═'*3 + '╩')*9 + '═'*3 + '╝' + res)
         else:
-            print(res + '\t'*8 + ' '*3 + color_sea + '╠' + ('═'*3 + '╬')*9 + '═'*3 + '╣' + res)
+            print(res + ' '*3 + color_sea + '╠' + ('═'*3 + '╬')*9 + '═'*3 + '╣' + res)
 
-    print(res + '\t'*8 + ' '*3 + color_player + '╔' + '═'*39 + '╗' + res)
-    print(res + '\t'*8 + ' '*3 + color_player + '║' + (str(player) + "'s board").center(39) + '║' + res)
-    print(res + '\t'*8 + ' '*3 + color_player + '╚' + '═'*39 + '╝' + res)
+    print(res + ' '*3 + color_player + '╔' + '═'*39 + '╗' + res)
+    print(res + ' '*3 + color_player + '║' + (str(player) + "'s board").center(39) + '║' + res)
+    print(res + ' '*3 + color_player + '╚' + '═'*39 + '╝' + res)
 
 
 def player_turn_ascii(player):

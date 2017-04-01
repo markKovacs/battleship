@@ -121,7 +121,7 @@ def main():
         if turn % 2 == 0:   # player1
             graphics.player_turn_ascii(p1_name)
             graphics.print_board(board_p1, p2_name)
-            print("Turn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p1_name))
+            print("\nTurn {} - Hello {}!".format(math.ceil((turn + 1) / 2), p1_name))
 
             shootTo = controller.user_guess()
 
@@ -163,6 +163,7 @@ def main():
         print("Game over! It's a draw!")
 
     # play_sound("victory", sleep_after=8)
+    time.sleep(5)
     outro.print_outro()
 
 

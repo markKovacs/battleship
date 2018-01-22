@@ -1,10 +1,5 @@
 # battleship
 
-NOTES:
-- init_board function modified --> board has become a local variable instead of global variable, change main accordingly
-- graphics.print_outro() --> define more thoroughly
-
-
 Battleship
 
 Péter Juhász & Márk Kovács
